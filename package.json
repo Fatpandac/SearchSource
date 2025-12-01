@@ -11,6 +11,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.23.0",
   "dependencies": {
+    "fast-glob": "^3.3.3",
     "minisearch": "^7.2.0"
   },
   "devDependencies": {
