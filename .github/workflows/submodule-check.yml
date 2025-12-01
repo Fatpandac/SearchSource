@@ -1,0 +1,48 @@
+name: Submodule Auto Update
+
+on:
+  schedule:
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+
+jobs:
+  check-submodules:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repo with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check and update submodules
+        run: bash ./scripts/check-submodules.sh
+
+      - name: Run npm script if updated
+        if: env.UPDATED == '1'
+        run: npm run run
+
+      - name: Commit and push changes
+        if: env.UPDATED == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions@github.com"
+
+          git add .
+          git commit -m "chore: submodule updated → $UPDATED_LIST"
+          git push
