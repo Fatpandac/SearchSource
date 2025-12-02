@@ -4,22 +4,20 @@ set -e
 UPDATED_MODULES=()
 
 echo "Fetching submodule remotes..."
-git submodule foreach 'git fetch --quiet'
+git submodule update --init
 
 # 遍历每个 submodule
-git submodule foreach '
+UPDATED_MODULES=($(git submodule foreach --quiet '
     branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
+    git fetch origin "$branch" >/dev/null 2>&1
     ahead=$(git rev-list HEAD..origin/$branch --count 2>/dev/null || echo 0)
-
     if [ "$ahead" -gt 0 ]; then
-        echo "[UPDATE] $name has $ahead new commits on origin/$branch"
-        UPDATED_MODULES+=("$name")
-
-        # 拉取最新提交
-        git checkout $branch
-        git merge origin/$branch --ff-only
+        echo "$name"
+        git checkout "$branch" >/dev/null 2>&1
+        git merge origin/$branch --ff-only >/dev/null 2>&1
     fi
-'
+'))
+
 
 if [ ${#UPDATED_MODULES[@]} -eq 0 ]; then
     echo "No submodule updates detected."
