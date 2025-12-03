@@ -1,3 +1,6 @@
 [submodule "source/rsshub-docs"]
 	path = source/rsshub-docs
 	url = https://github.com/RSSNext/rsshub-docs.git
+[submodule "source/repress"]
+	path = source/repress
+	url = git@github.com:web-infra-dev/rspress.git
