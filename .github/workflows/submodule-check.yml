@@ -13,8 +13,8 @@ jobs:
       - name: Checkout main repo with submodules
         uses: actions/checkout@v4
         with:
-          submodules: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -27,15 +27,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Check and update submodules
-        run: bash ./scripts/check-submodules.sh
+      - name: Update submodules
+        run: git submodule update --init --remote --recursive
 
-      - name: Run npm script if updated
-        if: env.UPDATED == '1'
+      - name: Generate search index
         run: npm run run
 
       - name: Commit and push changes
-        if: env.UPDATED == '1'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
@@ -43,5 +41,5 @@ jobs:
           git status --porcelain
 
           git add -A .
-          git commit -m "chore: submodule updated → $UPDATED_LIST"
+          git commit -m "chore: submodule updated"
           git push origin main

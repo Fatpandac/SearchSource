@@ -13,7 +13,6 @@ async function main() {
         const files = globSync(patterns, {
           cwd: path,
         });
-        console.log(files, repoPath)
 
         prev[locale] = files.map((file) => join(path, file));
 

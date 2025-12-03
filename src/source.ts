@@ -7,7 +7,7 @@ type Source = Record<"RSSHub" | "Rspress", SourceInfo>;
 
 const source: Source = {
   RSSHub: {
-    repoPath: "source/RSSHub-docs",
+    repoPath: "source/rsshub-docs",
     path: {
       "zh-CN": "src/zh/**/*.md",
       "en-US": ["src/**/*.md", "!src/zh/**"],
