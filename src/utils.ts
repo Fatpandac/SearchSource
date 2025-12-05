@@ -1,7 +1,7 @@
-import MiniSearch from "minisearch";
-import MarkdownIt from "markdown-it";
+import { randomUUID } from "node:crypto";
 import { JSDOM } from "jsdom";
-import { randomUUID } from "crypto";
+import MarkdownIt from "markdown-it";
+import MiniSearch from "minisearch";
 
 const md = new MarkdownIt();
 
@@ -23,7 +23,7 @@ function splitPageIntoSections(html: string) {
 
         if (idx !== 0 && current.text.trim()) {
             sections.push({ ...current })
-            let titles = current.titles
+            const titles = current.titles
             current = { titles, text: '' }
         }
 
@@ -36,7 +36,7 @@ function splitPageIntoSections(html: string) {
             !(next instanceof dom.window.Element && /^H[1-6]$/.test(next.tagName))
         ) {
             if (next.textContent) {
-                current.text += next.textContent + '\n'
+                current.text += `${next.textContent}\n`
             }
             next = next.nextSibling
         }
@@ -50,13 +50,13 @@ function splitPageIntoSections(html: string) {
 }
 
 export function generateSearchIndex(files: string[]) {
-    let miniSearch = new MiniSearch({
+    const miniSearch = new MiniSearch({
         fields: ["title", "titles", "content"],
         storeFields: ["title", "titles"],
     });
 
     for (const filePath of files) {
-        const content = require("fs").readFileSync(filePath, "utf-8");
+        const content = require("node:fs").readFileSync(filePath, "utf-8");
         const mdContent = md.render(content);
         const sections = splitPageIntoSections(mdContent);
 
@@ -71,6 +71,6 @@ export function generateSearchIndex(files: string[]) {
     }
 
 
-    let serializedIndex = JSON.stringify(miniSearch.toJSON());
+    const serializedIndex = JSON.stringify(miniSearch.toJSON());
     return serializedIndex;
 }

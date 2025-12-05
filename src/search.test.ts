@@ -1,5 +1,5 @@
+import * as fs from "node:fs";
 import MiniSearch from "minisearch";
-import * as fs from "fs";
 
 function testSearchIndex() {
     const rsshubEnDocs = fs.readFileSync('./search-index/RSSHub/en-US/search-index.json', 'utf8')

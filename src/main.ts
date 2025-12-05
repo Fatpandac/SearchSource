@@ -1,8 +1,8 @@
-import * as fs from "fs";
-import { generateSearchIndex } from "./utils";
-import source from "./source";
-import { join } from "path";
+import * as fs from "node:fs";
+import { join } from "node:path";
 import { globSync } from "fast-glob";
+import source from "./source";
+import { generateSearchIndex } from "./utils";
 
 async function main() {
   Object.entries(source).forEach(([docsName, data]) => {
