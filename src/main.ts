@@ -14,18 +14,21 @@ async function main() {
           cwd: path,
         });
 
-        prev[locale] = files.map((file) => join(path, file));
+        prev[locale] = {
+          filePaths: files,
+          rootPath: path,
+        };
 
         return prev;
       },
-      {} as Record<string, string[]>,
+      {} as Record<string, { filePaths: string[]; rootPath: string }>,
     );
 
     Object.entries(docsIndex).forEach(([locale, allFiles]) => {
       console.log(
-        `Generating search index for ${docsName} - ${locale} with ${allFiles.length} files.`,
+        `Generating search index for ${docsName} - ${locale} with ${allFiles.filePaths.length} files.`,
       );
-      const searchIndex = generateSearchIndex(allFiles);
+      const searchIndex = generateSearchIndex(allFiles.filePaths, allFiles.rootPath);
       const outputPath = join(
         __dirname,
         "..",

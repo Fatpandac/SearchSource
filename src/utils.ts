@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import path from "node:path";
 import { JSDOM } from "jsdom";
 import MarkdownIt from "markdown-it";
 import MiniSearch from "minisearch";
@@ -49,14 +50,14 @@ function splitPageIntoSections(html: string) {
     return sections
 }
 
-export function generateSearchIndex(files: string[]) {
+export function generateSearchIndex(files: string[], root: string) {
     const miniSearch = new MiniSearch({
         fields: ["title", "titles", "content"],
-        storeFields: ["title", "titles"],
+        storeFields: ["title", "titles", "url"],
     });
 
     for (const filePath of files) {
-        const content = require("node:fs").readFileSync(filePath, "utf-8");
+        const content = require("node:fs").readFileSync(path.join(root, filePath), "utf-8");
         const mdContent = md.render(content);
         const sections = splitPageIntoSections(mdContent);
 
@@ -66,6 +67,7 @@ export function generateSearchIndex(files: string[]) {
                 title: section.titles[0] || 'No Title',
                 titles: section.titles,
                 content: section.text,
+                url: filePath.replace('.md', '').replace('.mdx', ''),
             });
         });
     }

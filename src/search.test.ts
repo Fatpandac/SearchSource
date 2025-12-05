@@ -6,7 +6,7 @@ function testSearchIndex() {
 
     const search = MiniSearch.loadJSON(rsshubEnDocs, {
         fields: ["title", "titles", "content"],
-        storeFields: ["title", "titles"],
+        storeFields: ["title", "titles", "url"],
     });
 
 
