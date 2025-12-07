@@ -67,7 +67,7 @@ export function generateSearchIndex(files: string[], root: string) {
                 title: section.titles[0] || 'No Title',
                 titles: section.titles,
                 content: section.text,
-                url: filePath.replace('.md', '').replace('.mdx', ''),
+                url: filePath.replace(/\.mdx?$/, ''),
             });
         });
     }
