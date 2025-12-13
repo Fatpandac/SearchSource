@@ -3,6 +3,7 @@ import path from "node:path";
 import { JSDOM } from "jsdom";
 import MarkdownIt from "markdown-it";
 import MiniSearch from "minisearch";
+import { execSync } from "node:child_process";
 
 const md = new MarkdownIt();
 
@@ -76,3 +77,9 @@ export function generateSearchIndex(files: string[], root: string) {
     const serializedIndex = JSON.stringify(miniSearch.toJSON());
     return serializedIndex;
 }
+/** 子模块工作目录当前检出的提交 */
+export function getSubmoduleWorkingHash(submodulePath: string, short = true): string {
+  const cmd = `git -C "${submodulePath}" rev-parse ${short ? "--short " : ""}HEAD`;
+  return execSync(cmd, { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+}
+
